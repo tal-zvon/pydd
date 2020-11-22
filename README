@@ -37,3 +37,15 @@ To Do:
         For sources of unknown sizes (character devices, like a pipe),
         we can NOT figure this out quickly, so at some point, during
         the read, we're going to run out of data.
+
+Note:
+    I hope to finish this at some point.
+
+    Any proposed improvements are welcome, as long as they:
+        - Don't use external python libraries
+        - Don't create additional Python modules
+            I want to keep this a single file
+
+    If you are trying to understand any part of how this works, and
+    have questions, send me a message and I'll try to find some time to
+    explain anything you'd like.
