@@ -7,6 +7,7 @@
 import re
 import os
 import sys
+import time
 import signal
 import argparse
 import textwrap
@@ -20,13 +21,23 @@ from pathlib import Path
 RED='\033[00;31m'
 NORMAL='\033[0m'
 
+# Number of bytes read
+BYTES_READ = 0
+BYTES_WRITTEN = 0
+
+# Start time
+START_TIME = 0
+
 ##################
 # Ctrl+C Handler #
 ##################
 
 # Define the handler
 def signal_handler(*args):
-    print("\n")
+    current_time = time.perf_counter()
+    elapsed_time = current_time - START_TIME
+
+    print(f"\n{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(BYTES_WRITTEN, elapsed_time)}")
     sys.exit(0)
 
 # Register the handler
@@ -42,7 +53,7 @@ def blockdev_size(path):
         Source: https://stackoverflow.com/a/57137214/6423456
     """
 
-    with open(path, 'rb') as f:
+    with path.open('rb') as f:
         return f.seek(0, 2) or f.tell()
 
 def eprint(s, **kwargs):
@@ -71,6 +82,30 @@ def permissions_check(input_file, output_file):
     if not os.access(output_file, os.W_OK):
         eprint(f"No permission to write to {output_file}")
         sys.exit(1)
+
+def human_readable_size(bytes):
+    """
+        Given an int (number of bytes), returns a human-readable string
+        of the size
+    """
+
+    return '10 kB'
+
+def human_readable_time(sec):
+    """
+        Given the number of seconds, returns a human-readable string
+        of seconds/minutes/hours/days
+    """
+
+    return "2 weeks"
+
+def rate(bytes_written, elapsed_time):
+    """
+        Given how much data was written (in bytes), and how much time has
+        passed, calculates the rate, and returns a human-readable string
+    """
+
+    return '10 MB/s'
 
 def size(s):
     """
@@ -190,25 +225,24 @@ if __name__ == "__main__":
         # We were told explicitly how much data to read
         bytes_to_read = args.bs * args.count
     else:
-        # Try to figure it out
-        if args.input_file == "/dev/stdin":
-            # Input is a pipe - we don't know unless we were told
-            # explicitly using the --ts arg. If the user didn't specify
-            # --ts, args.ts will be None, so bytes_to_read will be set
-            # to None
-            bytes_to_read = args.ts
+        # Check the type of file it is
+        if input_file.is_block_device():
+            # This is a block device
+            bytes_to_read = blockdev_size(input_file)
+        elif input_file.is_file():
+            # This is a regular file
+            bytes_to_read = input_file.stat().st_size
+        elif input_file.is_char_device():
+            # This is a character device - we don't know the number
+            # of bytes to read
+            bytes_to_read = None
         else:
-            # Check the type of file it is
-            if input_file.is_block_device():
-                # This is a block device
-                bytes_to_read = blockdev_size(args.input_file)
-            elif input_file.is_file():
-                # This is a regular file
-                bytes_to_read = os.stat(args.input_file).st_size
-            else:
-                # This is an unsupported file type
-                eprint(f"{args.input_file} is an unsupported filetype")
-                sys.exit(1)
+            # This is an unsupported file type
+            eprint(f"{input_file} is an unsupported filetype")
+            sys.exit(1)
 
-    print(args)
-    print(f"Bytes to Read: {bytes_to_read}")
+    # Read/Write data
+    START_TIME = time.perf_counter()
+
+    with input_file.open(mode="rb") as src, output_file.open(mode="w") as dst:
+        time.sleep(10)
