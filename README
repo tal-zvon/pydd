@@ -14,6 +14,8 @@ modules to be placed in /usr/local/bin as well.
 
 Install Instructions:
     $ sudo cp -v pydd.py /usr/local/bin/pydd
+    $ sudo chown root:root /usr/local/bin/pydd
+    $ sudo chmod 755 /usr/local/bin/pydd
 
     You can now run the 'pydd' command from your terminal
 
