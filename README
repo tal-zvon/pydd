@@ -19,6 +19,9 @@ Install Instructions:
 
     You can now run the 'pydd' command from your terminal
 
+Uninstall Instructions:
+    $ sudo rm -v /usr/local/bin/pydd
+
 I tried to replicate the args of dd, except for the fact that I'm using
 argparse, which requires optional args to use the "--" prefix, so instead
 of dd's if= and of=, you'll need to do --if= and --of=.
