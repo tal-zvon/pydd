@@ -89,7 +89,18 @@ def human_readable_size(bytes):
         of the size
     """
 
-    return '10 kB'
+    i = 0
+    res = bytes
+    while True:
+        if res > 1024:
+            res /= 1024
+            i += 1
+        else:
+            break
+
+    units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]
+
+    return f'{res:.2f} {units[i]}'
 
 def human_readable_time(sec):
     """
