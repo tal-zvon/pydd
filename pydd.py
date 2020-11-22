@@ -9,6 +9,7 @@ import os
 import sys
 import time
 import signal
+import shutil
 import argparse
 import textwrap
 from pathlib import Path
@@ -43,6 +44,58 @@ signal.signal(signal.SIGINT, signal_handler)
 #############
 # Functions #
 #############
+
+def update_status(bytes_written, total_bytes, elapsed_time):
+    """
+        Given some info about current progress, prints a progress bar
+
+        Params:
+            bytes_written:
+                int of how many bytes have been written so far
+
+            total_bytes:
+                int of how many bytes there are in total
+                None if unknown
+
+            elapsed_time:
+                seconds we've been writing for up to this point
+    """
+
+    printProgressBar(bytes_written, total_bytes)
+
+# Print iterations progress
+def printProgressBar (iteration, total, prefix = '', suffix = '', usepercent = True, decimals = 1, fill = '█'):
+    """
+    Source: https://gist.github.com/shakeyourbunny/303b000168edc2705262ce40381034a3
+
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        usepercent  - Optoinal  : display percentage (Bool)
+        decimals    - Optional  : positive number of decimals in percent complete (Int), ignored if usepercent = False
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+    """
+    # length is calculated by terminal width
+    twx, twy = shutil.get_terminal_size()
+    length = twx - 1 - len(prefix) - len(suffix) -4
+    if usepercent:
+        length = length - 6
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    # process percent
+    if usepercent:
+        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+        sys.stdout.buffer.write(f'\r{prefix} |{bar}| {percent}% {suffix}'.encode('utf-8'))
+    else:
+        sys.stdout.buffer.write(f'\r{prefix} |{bar}| {suffix}'.encode('utf-8'))
+
+    # Print New Line on Complete
+    if iteration == total:
+        print(flush=True)
 
 def show_results():
     """
@@ -301,6 +354,7 @@ if __name__ == "__main__":
     ###################
 
     START_TIME = time.perf_counter()
+    last_status_update = time.perf_counter()
 
     # Open source for reading, and destination for writing
     with input_file.open(mode="rb") as src, output_file.open(mode="wb") as dst:
@@ -330,6 +384,15 @@ if __name__ == "__main__":
 
             # Record the total data written
             BYTES_WRITTEN += buf_size
+
+            # Update status
+            now = time.perf_counter()
+            if now - last_status_update > 1.0:
+                current_time = time.perf_counter()
+                elapsed_time = current_time - START_TIME
+
+                update_status(BYTES_WRITTEN, BYTES_TO_WRITE, elapsed_time)
+                last_status_update = now
 
     # Show user the results
     show_results()
