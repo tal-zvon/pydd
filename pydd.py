@@ -238,6 +238,7 @@ parser.add_argument(
 
 parser.add_argument(
     "--seek", metavar="BLOCKS",
+    type=int,
     help="Seek BLOCKS number of blocks before reading data")
 
 ########
