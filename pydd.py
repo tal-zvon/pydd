@@ -110,6 +110,12 @@ parser.add_argument(
     "--seek", metavar="BLOCKS",
     help="Seek BLOCKS number of blocks before reading data")
 
-# Parse sys.argv using the rules defined above
-args = parser.parse_args()
+########
+# Main #
+########
 
+if __name__ == "__main__":
+    # Parse sys.argv using the rules defined above
+    args = parser.parse_args()
+
+    print(args)
