@@ -236,7 +236,7 @@ parser.add_argument(
     "--ts", "--total-size",
     metavar="SIZE",
     type=size,
-    help="Total size in bytes (for use with pipes)")
+    help="Total size in bytes (allows us to show progress when using pipes)")
 
 parser.add_argument(
     "--count", metavar="BLOCKS",
