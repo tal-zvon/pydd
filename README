@@ -1,1 +1,9 @@
-Simple project written in Python to replace the most basic parts of dd
+Simple project written in Python to replicate the most common parts of dd.
+Inspired by: https://code.activestate.com/recipes/578907-python-awesome-dd/
+
+Mostly for educational purposes - a means for me to learn about reading
+from and writing to block devices at various locations, and to help
+others learn.
+
+The intent is to not have it use any external python libraries, and
+remain relatively simple.
