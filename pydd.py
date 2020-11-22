@@ -163,6 +163,7 @@ parser.add_argument(
 
 parser.add_argument(
     "--count", metavar="BLOCKS",
+    type=int,
     help="Number of blocks to transfer")
 
 parser.add_argument(
