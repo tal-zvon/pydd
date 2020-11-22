@@ -164,7 +164,7 @@ if __name__ == "__main__":
     # Parse sys.argv using the rules defined above
     args = parser.parse_args()
 
-    # Turn input file and output file intp pathlib Path objects
+    # Turn input file and output file into pathlib Path objects
     input_file = Path(args.input_file)
     output_file = Path(args.output_file)
 
