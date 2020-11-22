@@ -289,25 +289,40 @@ if __name__ == "__main__":
             eprint(f"{input_file} is an unsupported filetype")
             sys.exit(1)
 
-    # Read/Write data
+    ###################
+    # Read/Write Data #
+    ###################
+
     START_TIME = time.perf_counter()
 
-    with input_file.open(mode="rb") as src, output_file.open(mode="w") as dst:
+    # Open source for reading, and destination for writing
+    with input_file.open(mode="rb") as src, output_file.open(mode="wb") as dst:
         # Seek if we need to
         if args.seek:
-            src.seek()
+            src.seek(args.seek)
 
         # Write data
-        #
-        # If BYTES_TO_WRITE is None, we keep writing as long as the
-        # source (a character device or pipe) keeps sending us data
-        #
-        # If BYTES_TO_WRITE is known, write that much data and exit
-        while BYTES_TO_WRITE is None or BYTES_WRITTEN < BYTES_TO_WRITE:
-            # Write bytes
-            BYTES_WRITTEN += args.bs
+        while True:
+            if BYTES_TO_WRITE is None:
+                buf_size = args.bs
+            else:
+                data_left = BYTES_TO_WRITE - BYTES_WRITTEN
 
-            print(f"Total Bytes Written: {BYTES_WRITTEN}")
+                if data_left < args.bs:
+                    buf_size = data_left
+                else:
+                    buf_size = args.bs
+
+            # Check if we're done
+            if not buf_size:
+                break
+
+            # Write buf data
+            buf = src.read(buf_size)
+            dst.write(buf)
+
+            # Record the total data written
+            BYTES_WRITTEN += buf_size
 
     # Show user the results
     show_results()
