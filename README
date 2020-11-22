@@ -12,6 +12,11 @@ I'll also try to keep this down to a single file, so it can be placed
 in /usr/local/bin without requiring a package or other supporting python
 modules to be placed in /usr/local/bin as well.
 
+This was written to run on Linux. Any distribution with Python3 should
+work. I'll also probably try this on my Mac at work at some point,
+so that should work too. I'm not sure if it will work on Windows -
+if it doesn't, let me know. 
+
 Install Instructions:
     $ sudo cp -v pydd.py /usr/local/bin/pydd
     $ sudo chown root:root /usr/local/bin/pydd
