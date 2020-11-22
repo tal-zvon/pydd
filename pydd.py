@@ -89,9 +89,17 @@ def permissions_check(input_file, output_file):
         sys.exit(1)
 
     # Make sure we have the permissions to write to output_file
-    if not os.access(output_file, os.W_OK):
-        eprint(f"No permission to write to {output_file}")
-        sys.exit(1)
+    # Note: If the output file doesn't exist, make sure we have
+    # permissions to write to the dir
+    if output_file.exists():
+        if not os.access(output_file, os.W_OK):
+            eprint(f"No permission to write to {output_file}")
+            sys.exit(1)
+    else:
+        output_dir = output_file.parent
+        if not os.access(output_dir, os.W_OK):
+            eprint(f"No permission to create {output_file}")
+            sys.exit(1)
 
 def human_readable_size(bytes):
     """
