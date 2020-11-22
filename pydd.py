@@ -22,7 +22,6 @@ RED='\033[00;31m'
 NORMAL='\033[0m'
 
 # Number of bytes read
-BYTES_READ = 0
 BYTES_WRITTEN = 0
 
 # Start time
