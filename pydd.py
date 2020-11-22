@@ -201,11 +201,9 @@ if __name__ == "__main__":
             # Check the type of file it is
             if input_file.is_block_device():
                 # This is a block device
-                print(f"{args.input_file} is a block device")
                 bytes_to_read = blockdev_size(args.input_file)
             elif input_file.is_file():
                 # This is a regular file
-                print(f"{args.input_file} is a regular file")
                 bytes_to_read = os.stat(args.input_file).st_size
             else:
                 # This is an unsupported file type
