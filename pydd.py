@@ -102,13 +102,31 @@ def human_readable_size(bytes):
 
     return f'{res:.2f} {units[i]}'
 
-def human_readable_time(sec):
+def human_readable_time(seconds):
     """
         Given the number of seconds, returns a human-readable string
         of seconds/minutes/hours/days
+
+        Source: https://gist.github.com/borgstrom/936ca741e885a1438c374824efb038b3
     """
 
-    return "2 weeks"
+    TIME_DURATION_UNITS = (
+        ('week', 60*60*24*7),
+        ('day', 60*60*24),
+        ('hour', 60*60),
+        ('min', 60),
+        ('sec', 1)
+    )
+
+    if seconds == 0:
+        return '0 s'
+
+    parts = []
+    for unit, div in TIME_DURATION_UNITS:
+        amount, seconds = divmod(int(seconds), div)
+        if amount > 0:
+            parts.append('{} {}{}'.format(amount, unit, "" if amount == 1 else "s"))
+    return ', '.join(parts)
 
 def rate(bytes_written, elapsed_time):
     """
