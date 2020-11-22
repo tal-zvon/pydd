@@ -7,3 +7,7 @@ others learn.
 
 The intent is to not have it use any external python libraries, and
 remain relatively simple.
+
+I'll also try to keep this down to a single file, so it can be placed
+in /usr/local/bin without requiring a package or other supporting python
+modules to be placed in /usr/local/bin as well.
