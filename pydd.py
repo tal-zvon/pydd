@@ -37,7 +37,11 @@ def signal_handler(*args):
     current_time = time.perf_counter()
     elapsed_time = current_time - START_TIME
 
-    print(f"\n{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(BYTES_WRITTEN, elapsed_time)}")
+    if elapsed_time > 60:
+        print(f"\n{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(BYTES_WRITTEN, elapsed_time)}")
+    else:
+        print(f"\n{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {elapsed_time:.2f} s, {rate(BYTES_WRITTEN, elapsed_time)}")
+
     sys.exit(0)
 
 # Register the handler
