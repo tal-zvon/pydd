@@ -256,6 +256,11 @@ if __name__ == "__main__":
     # Ensure permissions for reading from source, and writing to dest
     permissions_check(input_file, output_file)
 
+    # Make sure we aren't being asked to seek on a character device
+    if input_file.is_char_device() and args.seek:
+        eprint(f"{input_file} is a character device - cannot seek it")
+        sys.exit(1)
+
     # Figure out amount of data we want to read
     if args.count:
         # We were told explicitly how much data to read
