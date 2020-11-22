@@ -261,22 +261,22 @@ if __name__ == "__main__":
         eprint(f"{input_file} is a character device - cannot seek it")
         sys.exit(1)
 
-    # Figure out amount of data we want to read
+    # Figure out amount of data we want to read/write
     if args.count:
         # We were told explicitly how much data to read
-        bytes_to_read = args.bs * args.count
+        BYTES_TO_WRITE = args.bs * args.count
     else:
         # Check the type of file it is
         if input_file.is_block_device():
             # This is a block device
-            bytes_to_read = blockdev_size(input_file)
+            BYTES_TO_WRITE = blockdev_size(input_file)
         elif input_file.is_file():
             # This is a regular file
-            bytes_to_read = input_file.stat().st_size
+            BYTES_TO_WRITE = input_file.stat().st_size
         elif input_file.is_char_device():
             # This is a character device - we don't know the number
             # of bytes to read
-            bytes_to_read = None
+            BYTES_TO_WRITE = None
         else:
             # This is an unsupported file type
             eprint(f"{input_file} is an unsupported filetype")
@@ -286,4 +286,16 @@ if __name__ == "__main__":
     START_TIME = time.perf_counter()
 
     with input_file.open(mode="rb") as src, output_file.open(mode="w") as dst:
-        time.sleep(10)
+        # Seek if we need to
+        if args.seek:
+            src.seek()
+
+        # Write data
+        #
+        # If BYTES_TO_WRITE is None, we keep writing as long as the
+        # source (a character device or pipe) keeps sending us data
+        #
+        # If BYTES_TO_WRITE is known, write that much data and exit
+        while BYTES_TO_WRITE is None or BYTES_WRITTEN < BYTES_TO_WRITE:
+            # Write bytes
+            BYTES_WRITTEN += args.bs
