@@ -7,6 +7,7 @@
 import re
 import os
 import sys
+import signal
 import argparse
 import textwrap
 from pathlib import Path
@@ -18,6 +19,18 @@ from pathlib import Path
 # Bash color escape codes
 RED='\033[00;31m'
 NORMAL='\033[0m'
+
+##################
+# Ctrl+C Handler #
+##################
+
+# Define the handler
+def signal_handler(*args):
+    print("\n")
+    sys.exit(0)
+
+# Register the handler
+signal.signal(signal.SIGINT, signal_handler)
 
 #############
 # Functions #
