@@ -9,7 +9,6 @@ import os
 import sys
 import time
 import signal
-import shutil
 import argparse
 import textwrap
 from pathlib import Path
@@ -61,41 +60,10 @@ def update_status(bytes_written, total_bytes, elapsed_time):
                 seconds we've been writing for up to this point
     """
 
-    printProgressBar(bytes_written, total_bytes)
-
-# Print iterations progress
-def printProgressBar (iteration, total, prefix = '', suffix = '', usepercent = True, decimals = 1, fill = '█'):
-    """
-    Source: https://gist.github.com/shakeyourbunny/303b000168edc2705262ce40381034a3
-
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        usepercent  - Optoinal  : display percentage (Bool)
-        decimals    - Optional  : positive number of decimals in percent complete (Int), ignored if usepercent = False
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-    """
-    # length is calculated by terminal width
-    twx, twy = shutil.get_terminal_size()
-    length = twx - 1 - len(prefix) - len(suffix) -4
-    if usepercent:
-        length = length - 6
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    # process percent
-    if usepercent:
-        percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-        sys.stdout.buffer.write(f'\r{prefix} |{bar}| {percent}% {suffix}'.encode('utf-8'))
+    if elapsed_time > 60:
+        print(f"{bytes_written} bytes ({human_readable_size(bytes_written)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(bytes_written, elapsed_time)}")
     else:
-        sys.stdout.buffer.write(f'\r{prefix} |{bar}| {suffix}'.encode('utf-8'))
-
-    # Print New Line on Complete
-    if iteration == total:
-        print(flush=True)
+        print(f"{bytes_written} bytes ({human_readable_size(bytes_written)}) copied, {elapsed_time:.2f} s, {rate(bytes_written, elapsed_time)}")
 
 def show_results():
     """
