@@ -11,3 +11,12 @@ remain relatively simple.
 I'll also try to keep this down to a single file, so it can be placed
 in /usr/local/bin without requiring a package or other supporting python
 modules to be placed in /usr/local/bin as well.
+
+Install Instructions:
+    $ sudo cp -v pydd.py /usr/local/bin/pydd
+
+    You can now run the 'pydd' command from your terminal
+
+I tried to replicate the args of dd, except for the fact that I'm using
+argparse, which requires optional args to use the "--" prefix, so instead
+of dd's if= and of=, you'll need to do --if= and --of=.
