@@ -34,14 +34,8 @@ START_TIME = 0
 
 # Define the handler
 def signal_handler(*args):
-    current_time = time.perf_counter()
-    elapsed_time = current_time - START_TIME
-
-    if elapsed_time > 60:
-        print(f"\n{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(BYTES_WRITTEN, elapsed_time)}")
-    else:
-        print(f"\n{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {elapsed_time:.2f} s, {rate(BYTES_WRITTEN, elapsed_time)}")
-
+    print("\n")
+    show_results()
     sys.exit(0)
 
 # Register the handler
@@ -50,6 +44,19 @@ signal.signal(signal.SIGINT, signal_handler)
 #############
 # Functions #
 #############
+
+def show_results():
+    """
+        Shows how much data we've written, and how much time has elapsed
+    """
+
+    current_time = time.perf_counter()
+    elapsed_time = current_time - START_TIME
+
+    if elapsed_time > 60:
+        print(f"{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(BYTES_WRITTEN, elapsed_time)}")
+    else:
+        print(f"{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {elapsed_time:.2f} s, {rate(BYTES_WRITTEN, elapsed_time)}")
 
 def blockdev_size(path):
     """
@@ -299,3 +306,8 @@ if __name__ == "__main__":
         while BYTES_TO_WRITE is None or BYTES_WRITTEN < BYTES_TO_WRITE:
             # Write bytes
             BYTES_WRITTEN += args.bs
+
+            print(f"Total Bytes Written: {BYTES_WRITTEN}")
+
+    # Show user the results
+    show_results()
