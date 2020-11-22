@@ -135,10 +135,12 @@ def human_readable_time(seconds):
 def rate(bytes_written, elapsed_time):
     """
         Given how much data was written (in bytes), and how much time has
-        passed, calculates the rate, and returns a human-readable string
+        passed (in seconds), calculates the rate, and returns a
+        human-readable string
     """
 
-    return '10 MB/s'
+    bps = bytes_written / elapsed_time
+    return f"{human_readable_size(bps)}/s"
 
 def size(s):
     """
