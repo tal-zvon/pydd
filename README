@@ -36,7 +36,7 @@ argparse, which requires optional args to use the "--" prefix, so instead
 of dd's if= and of=, you'll need to do --if= and --of=.
 
 To Do:
-    What happens if user requests that we read more data than the source has?
+    1. What happens if user requests that we read more data than the source has?
 
         For sources of known sizes (files, block devices), we can figure
         this out pretty quick, and error out.
@@ -44,6 +44,13 @@ To Do:
         For sources of unknown sizes (character devices, like a pipe),
         we can NOT figure this out quickly, so at some point, during
         the read, we're going to run out of data.
+
+    2. The progress bar library looks nice, but some weird output is
+        happening - need to investigate
+
+    3. It seems like the progress bar library does its own calculation
+        of elapsed time - I should look over my code to see if my tracking
+        of time is still required
 
 Note:
     I hope to finish this at some point.
