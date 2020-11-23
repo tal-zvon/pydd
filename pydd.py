@@ -61,9 +61,22 @@ def update_status(bytes_written, total_bytes, elapsed_time):
     """
 
     if elapsed_time > 60:
-        print(f"{bytes_written} bytes ({human_readable_size(bytes_written)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(bytes_written, elapsed_time)}")
+        print(f"{bytes_written} bytes ({sizeof_fmt(bytes_written)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(bytes_written, elapsed_time)}")
     else:
-        print(f"{bytes_written} bytes ({human_readable_size(bytes_written)}) copied, {elapsed_time:.2f} s, {rate(bytes_written, elapsed_time)}")
+        print(f"{bytes_written} bytes ({sizeof_fmt(bytes_written)}) copied, {elapsed_time:.2f} s, {rate(bytes_written, elapsed_time)}")
+
+def sizeof_fmt(num, suffix='B'):
+    """
+        Converts filesize to human-readable form
+        Source: https://stackoverflow.com/a/1094933/6423456
+    """
+
+    for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
+        if abs(num) < 1024.0:
+            return f"{num:3.1f} {unit}{suffix}"
+        num /= 1024.0
+
+    return "%.1f%s%s" % (num, 'Yi', suffix)
 
 def show_results():
     """
@@ -74,9 +87,9 @@ def show_results():
     elapsed_time = current_time - START_TIME
 
     if elapsed_time > 60:
-        print(f"{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(BYTES_WRITTEN, elapsed_time)}")
+        print(f"{BYTES_WRITTEN} bytes ({sizeof_fmt(BYTES_WRITTEN)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(BYTES_WRITTEN, elapsed_time)}")
     else:
-        print(f"{BYTES_WRITTEN} bytes ({human_readable_size(BYTES_WRITTEN)}) copied, {elapsed_time:.2f} s, {rate(BYTES_WRITTEN, elapsed_time)}")
+        print(f"{BYTES_WRITTEN} bytes ({sizeof_fmt(BYTES_WRITTEN)}) copied, {elapsed_time:.2f} s, {rate(BYTES_WRITTEN, elapsed_time)}")
 
 def blockdev_size(path):
     """
@@ -122,25 +135,6 @@ def permissions_check(input_file, output_file):
             eprint(f"No permission to create {output_file}")
             sys.exit(1)
 
-def human_readable_size(bytes):
-    """
-        Given an int (number of bytes), returns a human-readable string
-        of the size
-    """
-
-    i = 0
-    res = bytes
-    while True:
-        if res > 1024:
-            res /= 1024
-            i += 1
-        else:
-            break
-
-    units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]
-
-    return f'{res:.2f} {units[i]}'
-
 def human_readable_time(seconds):
     """
         Given the number of seconds, returns a human-readable string
@@ -175,7 +169,7 @@ def rate(bytes_written, elapsed_time):
     """
 
     bps = bytes_written / elapsed_time
-    return f"{human_readable_size(bps)}/s"
+    return f"{sizeof_fmt(bps)}/s"
 
 def size(s):
     """
