@@ -315,7 +315,11 @@ if __name__ == "__main__":
     # Read/Write Data #
     ###################
 
+    # Time we started reading/writing
     START_TIME = time.perf_counter()
+
+    # Keeps track of the last time we updated stdout
+    # We don't want to update it too often, or we'll slow down IO operations
     last_status_update = time.perf_counter()
 
     # Open source for reading, and destination for writing
