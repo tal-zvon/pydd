@@ -168,8 +168,8 @@ def rate(bytes_written, elapsed_time):
         human-readable string
     """
 
-    bps = bytes_written / elapsed_time
-    return f"{sizeof_fmt(bps)}/s"
+    Bps = bytes_written / elapsed_time
+    return f"{sizeof_fmt(Bps)}/s"
 
 def size(s):
     """
