@@ -52,6 +52,16 @@ To Do:
         of elapsed time - I should look over my code to see if my tracking
         of time is still required
 
+    4. It would be cool if --bs=auto was an option
+        In that case, it would use different buffer sizes to do a speed
+        test while copying, and stick to the one that's the fastest.
+
+        This might be useful for large copy operations.
+
+        Note: If tests show that the difference is not significant
+        between optimal buffer size, and arbitrarily chosen buffer size,
+        this might be more trouble than it's worth
+
 Note:
     I hope to finish this at some point.
 
