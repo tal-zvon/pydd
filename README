@@ -5,7 +5,7 @@ Mostly for educational purposes - a means for me to learn about reading
 from and writing to block devices at various locations, and to help
 others learn.
 
-The intent is to not have it use any external python libraries, and
+The intent is to not have it require any external python libraries, and
 remain relatively simple.
 
 I'll also try to keep this down to a single file, so it can be placed
@@ -24,6 +24,10 @@ Install Instructions:
 
     You can now run the 'pydd' command from your terminal
 
+    Optional:
+        If you want a nice progress bar as output, also do:
+            $ pip install requirements.txt
+
 Uninstall Instructions:
     $ sudo rm -v /usr/local/bin/pydd
 
@@ -32,9 +36,7 @@ argparse, which requires optional args to use the "--" prefix, so instead
 of dd's if= and of=, you'll need to do --if= and --of=.
 
 To Do:
-    1. Show progress bar as it writes
-    2. What happens if user requests that we read more data than the
-        source has?
+    What happens if user requests that we read more data than the source has?
 
         For sources of known sizes (files, block devices), we can figure
         this out pretty quick, and error out.
@@ -47,7 +49,8 @@ Note:
     I hope to finish this at some point.
 
     Any proposed improvements are welcome, as long as they:
-        - Don't use external python libraries
+        - Don't require external python libraries
+            I used one to draw the progress bar, but made it optional
         - Don't create additional Python modules
             I want to keep this a single file
 
