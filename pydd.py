@@ -21,7 +21,7 @@ from pathlib import Path
 RED='\033[00;31m'
 NORMAL='\033[0m'
 
-# Number of bytes read
+# Number of bytes written
 BYTES_WRITTEN = 0
 
 # Start time
