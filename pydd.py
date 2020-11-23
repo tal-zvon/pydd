@@ -13,6 +13,16 @@ import argparse
 import textwrap
 from pathlib import Path
 
+####################
+# Optional Imports #
+####################
+
+# Progress Bar Library
+try:
+    import progressbar
+except ModuleNotFoundError:
+    progressbar = None
+
 ###############
 # Global Vars #
 ###############
@@ -26,6 +36,9 @@ BYTES_WRITTEN = 0
 
 # Start time
 START_TIME = 0
+
+# Our progress bar
+BAR = None
 
 ##################
 # Ctrl+C Handler #
@@ -60,10 +73,13 @@ def update_status(bytes_written, total_bytes, elapsed_time):
                 seconds we've been writing for up to this point
     """
 
-    if elapsed_time > 60:
-        print(f"{bytes_written} bytes ({sizeof_fmt(bytes_written)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(bytes_written, elapsed_time)}")
+    if progressbar:
+        BAR.update(BYTES_WRITTEN)
     else:
-        print(f"{bytes_written} bytes ({sizeof_fmt(bytes_written)}) copied, {elapsed_time:.2f} s, {rate(bytes_written, elapsed_time)}")
+        if elapsed_time > 60:
+            print(f"{bytes_written} bytes ({sizeof_fmt(bytes_written)}) copied, {human_readable_time(elapsed_time)} ({elapsed_time:.2f} s), {rate(bytes_written, elapsed_time)}")
+        else:
+            print(f"{bytes_written} bytes ({sizeof_fmt(bytes_written)}) copied, {elapsed_time:.2f} s, {rate(bytes_written, elapsed_time)}")
 
 def sizeof_fmt(num, suffix='B'):
     """
@@ -310,6 +326,13 @@ if __name__ == "__main__":
             # This is an unsupported file type
             eprint(f"{input_file} is an unsupported filetype")
             sys.exit(1)
+
+    # Initialize progress bar
+    if progressbar:
+        if BYTES_TO_WRITE is None:
+            BAR = progressbar.ProgressBar(max_value=progressbar.UnknownLength)
+        else:
+            BAR = progressbar.ProgressBar(max_value=BYTES_TO_WRITE)
 
     ###################
     # Read/Write Data #
